@@ -56,7 +56,7 @@ export function TopBar() {
       }}
     >
       <Box sx={{ fontWeight: tokens.typography.weightBlack, fontSize: '1rem', color: c.textPrimary, letterSpacing: '-0.01em', flexShrink: 0, mr: 1 }}>
-        Chainium
+        Chain
       </Box>
 
       <Button disableRipple onClick={() => navigate('/')} sx={navBtnSx(isTxs)}>

@@ -32,9 +32,9 @@ export async function fetchTransaction(signature: string): Promise<TxData> {
   return get<TxData>(`/transactions/signature/${encodeURIComponent(signature)}`);
 }
 
-export async function fetchTransactionsByAddress(address: string, limit = 20, offset = 0): Promise<TxData[]> {
+export async function fetchTransactionsByAddress(address: string, limit = 20, offset = 0, reverse = true): Promise<TxData[]> {
   try {
-    return await get<TxData[]>(`/transactions/address/${address}?limit=${limit}&offset=${offset}&reverse=true`);
+    return await get<TxData[]>(`/transactions/address/${address}?limit=${limit}&offset=${offset}&reverse=${reverse}`);
   } catch { return []; }
 }
 
