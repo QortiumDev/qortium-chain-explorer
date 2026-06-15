@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { Box, Button, CircularProgress, Chip, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useColors } from '../theme/ColorTokensContext';
@@ -15,6 +15,8 @@ const TX_LIMIT = 20;
 export function AddressPage() {
   const { address } = useParams<{ address: string }>();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const reverse = searchParams.get('reverse') !== 'false';
   const c = useColors();
 
   const [account, setAccount]     = useState<AccountInfo | null>(null);
@@ -54,23 +56,23 @@ export function AddressPage() {
       setLoadingHead(false);
     });
 
-    void fetchTransactionsByAddress(address, TX_LIMIT, 0).then(results => {
+    void fetchTransactionsByAddress(address, TX_LIMIT, 0, reverse).then(results => {
       setTxs(results);
       setHasMore(results.length === TX_LIMIT);
       setTxOffset(results.length);
       setLoadingTxs(false);
     });
-  }, [address]);
+  }, [address, reverse]);
 
   const loadMore = useCallback(async () => {
     if (!address) return;
     setLoadingMore(true);
-    const results = await fetchTransactionsByAddress(address, TX_LIMIT, txOffset);
+    const results = await fetchTransactionsByAddress(address, TX_LIMIT, txOffset, reverse);
     setTxs(prev => [...prev, ...results]);
     setHasMore(results.length === TX_LIMIT);
     setTxOffset(o => o + results.length);
     setLoadingMore(false);
-  }, [address, txOffset]);
+  }, [address, txOffset, reverse]);
 
   if (loadingHead && !error) {
     return (
