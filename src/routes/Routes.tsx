@@ -6,6 +6,7 @@ import { BlockPage } from '../pages/BlockPage';
 import { TxPage } from '../pages/TxPage';
 import { AddressPage } from '../pages/AddressPage';
 import { PaymentsPage } from '../pages/PaymentsPage';
+import { NamePage } from '../pages/NamePage';
 import { useIframe } from '../hooks/useIframeListener';
 
 const _startRoute = new URLSearchParams(window.location.search).get('_route');
@@ -32,6 +33,7 @@ const router = createHashRouter([
       { path: 'block/:height',   element: <BlockPage /> },
       { path: 'tx/:signature',   element: <TxPage /> },
       { path: 'address/:address', element: <AddressPage /> },
+      { path: 'name/:name',       element: <NamePage /> },
       { path: 'payments',         element: <PaymentsPage /> },
     ],
   },

@@ -72,3 +72,22 @@ export interface PeersSummary {
   inboundConnections: number;
   outboundConnections: number;
 }
+
+export interface NameInfo {
+  name: string;
+  owner: string;
+  data?: string;
+  registered?: number;
+  isForSale?: boolean;
+  salePrice?: string;
+}
+
+export interface QdnResource {
+  name: string;
+  service: string;
+  identifier: string;
+  size?: number;
+  created?: number;
+  updated?: number;
+  status?: string;
+}

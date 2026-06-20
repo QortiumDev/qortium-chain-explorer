@@ -1,4 +1,4 @@
-import type { BlockData, BlockSummary, TxData, AccountInfo, OnlineAccountLevel, PeersSummary } from '../types';
+import type { BlockData, BlockSummary, TxData, AccountInfo, OnlineAccountLevel, PeersSummary, NameInfo, QdnResource } from '../types';
 
 async function get<T>(path: string): Promise<T> {
   const res = await fetch(path);
@@ -127,4 +127,16 @@ export async function fetchPrimaryName(address: string): Promise<string | null> 
     const result = await get<{ name: string | null; owner: string }>(`/names/primary/${address}`);
     return result.name ?? null;
   } catch { return null; }
+}
+
+export async function fetchNameInfo(name: string): Promise<NameInfo> {
+  return get<NameInfo>(`/names/${encodeURIComponent(name)}`);
+}
+
+export async function fetchQdnResourcesByName(name: string, limit = 50, offset = 0): Promise<QdnResource[]> {
+  try {
+    return await get<QdnResource[]>(
+      `/arbitrary/resources/search?name=${encodeURIComponent(name)}&limit=${limit}&offset=${offset}&reverse=true`
+    );
+  } catch { return []; }
 }
