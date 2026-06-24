@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useColors } from '../theme/ColorTokensContext';
@@ -45,7 +45,7 @@ function BlockRow({ block }: { block: BlockSummary }) {
       </Typography>
       <Box sx={{ flex: 1, minWidth: 0 }}>
         {block.minterAddress && (
-          <Box onClick={e => e.stopPropagation()} sx={{ display: 'inline-flex' }}>
+          <Box onClick={(e: MouseEvent) => e.stopPropagation()} sx={{ display: 'inline-flex' }}>
             <HashChip
               hash={block.minterAddress}
               onClick={() => navigate(`/address/${block.minterAddress}`)}

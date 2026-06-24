@@ -1,3 +1,4 @@
+import type { MouseEvent } from 'react';
 import { Box, Collapse, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useNavigate } from 'react-router-dom';
@@ -59,7 +60,7 @@ function AddrLink({ address }: { address: string }) {
   const navigate = useNavigate();
   return (
     <Typography
-      onClick={e => { e.stopPropagation(); navigate(`/address/${address}`); }}
+      onClick={(e: MouseEvent) => { e.stopPropagation(); navigate(`/address/${address}`); }}
       sx={{ fontSize: '0.8rem', fontFamily: 'monospace', color: c.accent, cursor: 'pointer', wordBreak: 'break-all', '&:hover': { color: c.accentHover } }}
     >
       {address}
@@ -113,7 +114,7 @@ export function TxRow({ tx, expanded, onToggle }: { tx: TxData; expanded: boolea
               <Typography sx={{ fontSize: '0.65rem', color: c.textSecondary, flexShrink: 0 }}>→</Typography>
               <Typography
                 sx={{ fontSize: '0.78rem', fontFamily: 'monospace', color: c.accent, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', '&:hover': { color: c.accentHover } }}
-                onClick={e => { e.stopPropagation(); navigate(`/address/${tx.recipient}`); }}
+                onClick={(e: MouseEvent) => { e.stopPropagation(); navigate(`/address/${tx.recipient}`); }}
               >
                 {tx.recipient.slice(0, 12)}…
               </Typography>
@@ -162,7 +163,7 @@ export function TxRow({ tx, expanded, onToggle }: { tx: TxData; expanded: boolea
             <Field label="Block">
               <Typography
                 sx={{ fontSize: '0.82rem', fontWeight: tokens.typography.weightBold, color: c.accent, cursor: 'pointer', '&:hover': { color: c.accentHover } }}
-                onClick={e => { e.stopPropagation(); navigate(`/block/${tx.blockHeight}`); }}
+                onClick={(e: MouseEvent) => { e.stopPropagation(); navigate(`/block/${tx.blockHeight}`); }}
               >
                 #{tx.blockHeight.toLocaleString()}
               </Typography>
