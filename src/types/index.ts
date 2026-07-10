@@ -49,10 +49,11 @@ export interface TxData {
   data?: string;
   // sender
   creatorAddress?: string;
-  // arbitrary
+  // arbitrary / rate-resource
   service?: string;
   identifier?: string;
   size?: number;
+  rating?: number;
 }
 
 export interface AccountInfo {
