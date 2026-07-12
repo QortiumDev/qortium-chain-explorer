@@ -15,6 +15,7 @@ import { EnumTheme } from '../../types';
 import { RatingControl } from './RatingControl';
 
 const APP_QDN_NAME = 'Chain';
+const APP_QDN_IDENTIFIER = 'Chain';
 
 function routeSearch(q: string, navigate: ReturnType<typeof useNavigate>) {
   const s = q.trim();
@@ -173,7 +174,7 @@ export function TopBar() {
         />
       </Box>
 
-      <RatingControl qdnName={APP_QDN_NAME} />
+      <RatingControl qdnName={APP_QDN_NAME} identifier={APP_QDN_IDENTIFIER} />
 
       <Tooltip title={isFollowed ? 'Stop following this app' : 'Follow this app'} placement="bottom">
         <IconButton
