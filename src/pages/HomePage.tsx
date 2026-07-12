@@ -214,7 +214,7 @@ export function HomePage() {
   // ─── Render ──────────────────────────────────────────────────────────────────
 
   return (
-    <Box sx={{ pt: `${tokens.spacing.topBarHeight + 24}px`, pb: 4, px: { xs: 2, md: 4 }, maxWidth: 900, mx: 'auto' }}>
+    <Box sx={{ pt: `calc(var(--chain-top-bar-height, ${tokens.spacing.topBarHeight}px) + 24px)`, pb: 4, px: { xs: 2, md: 4 }, maxWidth: 900, mx: 'auto' }}>
 
       {/* Filter card */}
       <Box sx={{ border: `${tokens.shape.borderWidth} solid ${c.borderLight}`, borderRadius: `${tokens.shape.radius}px`, bgcolor: c.surface, px: 2.5, py: 2, mb: 2 }}>

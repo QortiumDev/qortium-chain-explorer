@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useAtom } from 'jotai';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useAtom, useAtomValue } from 'jotai';
 import { Box, Button, IconButton, InputBase, Tooltip } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import LightModeIcon from '@mui/icons-material/LightMode';
@@ -10,7 +10,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useColors } from '../../theme/ColorTokensContext';
 import { tokens } from '../../theme/tokens';
-import { themeAtom } from '../../state/atoms';
+import { themeAtom, uiStyleAtom } from '../../state/atoms';
 import { EnumTheme } from '../../types';
 import { RatingControl } from './RatingControl';
 
@@ -27,11 +27,36 @@ function routeSearch(q: string, navigate: ReturnType<typeof useNavigate>) {
 export function TopBar() {
   const c = useColors();
   const [theme, setTheme] = useAtom(themeAtom);
+  const uiStyle = useAtomValue(uiStyleAtom);
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const headerRef = useRef<HTMLElement | null>(null);
   const [search, setSearch] = useState('');
   const [isFollowed, setIsFollowed] = useState(false);
   const [followBusy, setFollowBusy] = useState(false);
+  const isClassic = uiStyle === 'classic';
+
+  useLayoutEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+
+    const updateHeight = () => {
+      document.documentElement.style.setProperty(
+        '--chain-top-bar-height',
+        `${header.getBoundingClientRect().height}px`,
+      );
+    };
+
+    updateHeight();
+    if (typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', updateHeight);
+      return () => window.removeEventListener('resize', updateHeight);
+    }
+
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, [isClassic]);
 
   useEffect(() => {
     qdnRequest({ action: 'GET_LIST', listName: 'followedNames' })
@@ -63,6 +88,27 @@ export function TopBar() {
     setSearch('');
   }
 
+  function handleToggleTheme() {
+    setTheme(current => {
+      const next = current === EnumTheme.DARK ? EnumTheme.LIGHT : EnumTheme.DARK;
+      document.documentElement.dataset.theme = next;
+      document.documentElement.style.colorScheme = next;
+      return next;
+    });
+  }
+
+  const buttonSx = {
+    borderRadius: `${isClassic ? tokens.shape.radiusMd : tokens.shape.radius}px`,
+    minWidth: 44,
+    minHeight: 44,
+    width: 44,
+    height: 44,
+    p: 0,
+    color: c.textSecondary,
+    '&:hover': { color: c.accent, bgcolor: isClassic ? c.controlHover : c.borderLight },
+    transition: c.transitionControl,
+  };
+
   const isBlocks   = pathname === '/blocks' || pathname.startsWith('/block/');
   const isPayments = pathname === '/payments';
   const isTxs      = !isBlocks && !isPayments;
@@ -79,13 +125,18 @@ export function TopBar() {
   return (
     <Box
       component="header"
+      ref={headerRef}
       sx={{
         position: 'fixed', top: 0, left: 0, right: 0,
-        height: tokens.spacing.topBarHeight,
+        height: isClassic ? 'auto' : tokens.spacing.topBarHeight,
+        minHeight: isClassic ? 'auto' : tokens.spacing.topBarHeight,
         bgcolor: c.surface,
-        borderBottom: `${tokens.shape.borderWidth} solid ${c.borderLight}`,
-        display: 'flex', alignItems: 'center',
-        px: 2, gap: 1, zIndex: 100,
+        borderBottom: `${isClassic ? tokens.shape.classicBorderWidth : tokens.shape.borderWidth} solid ${isClassic ? c.border : c.borderLight}`,
+        boxShadow: isClassic ? c.topBarShadow : 'none',
+        display: 'flex', alignItems: 'center', flexWrap: 'wrap',
+        px: isClassic ? { xs: 1.25, sm: 1.75 } : 2,
+        py: isClassic ? 1 : 0,
+        gap: isClassic ? 1 : 1, zIndex: 100,
       }}
     >
       <Box sx={{ fontWeight: tokens.typography.weightBlack, fontSize: '1rem', color: c.textPrimary, letterSpacing: '-0.01em', flexShrink: 0, mr: 1 }}>
@@ -129,7 +180,7 @@ export function TopBar() {
           size="small"
           onClick={() => void handleToggleFollow()}
           disabled={followBusy}
-          sx={{ borderRadius: `${tokens.shape.radius}px`, minWidth: 44, minHeight: 44, color: isFollowed ? c.accent : c.textSecondary, '&:hover': { color: c.accent, bgcolor: c.borderLight }, transition: '0.15s ease' }}
+          sx={{ ...buttonSx, color: isFollowed ? c.accent : c.textSecondary }}
         >
           {isFollowed ? <PersonRemoveAlt1Icon fontSize="small" /> : <PersonAddAlt1Icon fontSize="small" />}
         </IconButton>
@@ -139,7 +190,7 @@ export function TopBar() {
         <IconButton
           size="small"
           onClick={handleOpenHelp}
-          sx={{ borderRadius: `${tokens.shape.radius}px`, minWidth: 44, minHeight: 44, color: c.textSecondary, '&:hover': { color: c.accent, bgcolor: c.borderLight }, transition: '0.15s ease' }}
+          sx={buttonSx}
         >
           <HelpOutlineIcon fontSize="small" />
         </IconButton>
@@ -147,8 +198,8 @@ export function TopBar() {
 
       <Tooltip title={theme === EnumTheme.DARK ? 'Light mode' : 'Dark mode'} placement="bottom">
         <IconButton
-          onClick={() => setTheme(t => t === EnumTheme.DARK ? EnumTheme.LIGHT : EnumTheme.DARK)}
-          sx={{ borderRadius: `${tokens.shape.radius}px`, minWidth: 44, minHeight: 44, color: c.textSecondary, '&:hover': { color: c.accent, bgcolor: c.borderLight }, transition: '0.15s ease' }}
+          onClick={handleToggleTheme}
+          sx={buttonSx}
         >
           {theme === EnumTheme.DARK ? <LightModeIcon fontSize="small" /> : <DarkModeIcon fontSize="small" />}
         </IconButton>

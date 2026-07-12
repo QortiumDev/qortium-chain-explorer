@@ -215,7 +215,7 @@ export function PaymentsPage() {
   );
 
   return (
-    <Box sx={{ pt: `${tokens.spacing.topBarHeight + 24}px`, pb: 4, px: { xs: 2, md: 4 }, maxWidth: 980, mx: 'auto' }}>
+    <Box sx={{ pt: `calc(var(--chain-top-bar-height, ${tokens.spacing.topBarHeight}px) + 24px)`, pb: 4, px: { xs: 2, md: 4 }, maxWidth: 980, mx: 'auto' }}>
 
       {/* Search */}
       <Box sx={{

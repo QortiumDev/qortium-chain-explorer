@@ -84,7 +84,7 @@ export function BlockPage() {
 
   if (loadingBlock) {
     return (
-      <Box sx={{ pt: `${tokens.spacing.topBarHeight + 24}px`, display: 'flex', justifyContent: 'center', py: 8 }}>
+      <Box sx={{ pt: `calc(var(--chain-top-bar-height, ${tokens.spacing.topBarHeight}px) + 24px)`, display: 'flex', justifyContent: 'center', py: 8 }}>
         <CircularProgress size={28} sx={{ color: c.accent }} />
       </Box>
     );
@@ -92,14 +92,14 @@ export function BlockPage() {
 
   if (error || !block) {
     return (
-      <Box sx={{ pt: `${tokens.spacing.topBarHeight + 24}px`, pb: 4, px: { xs: 2, md: 4 }, maxWidth: 900, mx: 'auto' }}>
+      <Box sx={{ pt: `calc(var(--chain-top-bar-height, ${tokens.spacing.topBarHeight}px) + 24px)`, pb: 4, px: { xs: 2, md: 4 }, maxWidth: 900, mx: 'auto' }}>
         <Typography sx={{ color: c.error, fontSize: '0.85rem' }}>{error ?? 'Block not found.'}</Typography>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ pt: `${tokens.spacing.topBarHeight + 24}px`, pb: 4, px: { xs: 2, md: 4 }, maxWidth: 900, mx: 'auto' }}>
+    <Box sx={{ pt: `calc(var(--chain-top-bar-height, ${tokens.spacing.topBarHeight}px) + 24px)`, pb: 4, px: { xs: 2, md: 4 }, maxWidth: 900, mx: 'auto' }}>
 
       {/* Back + title */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
