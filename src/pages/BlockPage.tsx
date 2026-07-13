@@ -5,6 +5,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useColors } from '../theme/ColorTokensContext';
 import { tokens } from '../theme/tokens';
 import { HashChip } from '../components/common/HashChip';
+import { AddressChip } from '../components/common/AddressChip';
 import { TxRow } from '../components/common/TxRow';
 import { fetchBlockByHeight, fetchBlockTransactions } from '../api/rest';
 import { formatDate, formatQort } from '../utils/format';
@@ -127,7 +128,7 @@ export function BlockPage() {
         <FieldRow label="Minter">
           {block.minterAddress ? (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <HashChip hash={block.minterAddress} onClick={() => navigate(`/address/${block.minterAddress}`)} />
+              <AddressChip address={block.minterAddress} onClick={() => navigate(`/address/${block.minterAddress}`)} />
               {block.minterLevel != null && (
                 <Typography sx={{ fontSize: '0.65rem', fontWeight: tokens.typography.weightBold, color: c.textSecondary }}>
                   Level {block.minterLevel}

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useColors } from '../../theme/ColorTokensContext';
 import { tokens } from '../../theme/tokens';
 import { formatAge, formatDate, formatQort, serviceLabel, txTypeLabel, txTypeCategory, type TxCategory } from '../../utils/format';
+import { useAddressName } from '../../hooks/useAddressName';
 import type { TxData } from '../../types';
 
 function categoryColor(cat: TxCategory, c: ReturnType<typeof useColors>): string {
@@ -58,19 +59,35 @@ function FieldText({ children }: { children: React.ReactNode }) {
 function AddrLink({ address }: { address: string }) {
   const c = useColors();
   const navigate = useNavigate();
+  const name = useAddressName(address);
   return (
-    <Typography
+    <Box
       onClick={(e: MouseEvent) => { e.stopPropagation(); navigate(`/address/${address}`); }}
-      sx={{ fontSize: '0.8rem', fontFamily: 'monospace', color: c.accent, cursor: 'pointer', wordBreak: 'break-all', '&:hover': { color: c.accentHover } }}
+      sx={{ cursor: 'pointer' }}
     >
-      {address}
-    </Typography>
+      {name ? (
+        <>
+          <Typography sx={{ fontSize: '0.82rem', fontWeight: 500, lineHeight: 1.3, color: c.accent, '&:hover': { color: c.accentHover } }}>
+            {name}
+          </Typography>
+          <Typography sx={{ fontSize: '0.7rem', fontFamily: 'monospace', lineHeight: 1.3, color: c.textSecondary, wordBreak: 'break-all' }}>
+            {address}
+          </Typography>
+        </>
+      ) : (
+        <Typography sx={{ fontSize: '0.8rem', fontFamily: 'monospace', color: c.accent, wordBreak: 'break-all', '&:hover': { color: c.accentHover } }}>
+          {address}
+        </Typography>
+      )}
+    </Box>
   );
 }
 
 export function TxRow({ tx, expanded, onToggle }: { tx: TxData; expanded: boolean; onToggle: () => void }) {
   const c = useColors();
   const navigate = useNavigate();
+  const recipientName = useAddressName(tx.recipient);
+  const senderName = useAddressName(tx.creatorAddress);
 
   // Build a summary detail for the collapsed row
   const summary = tx.amount
@@ -113,16 +130,26 @@ export function TxRow({ tx, expanded, onToggle }: { tx: TxData; expanded: boolea
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
               <Typography sx={{ fontSize: '0.65rem', color: c.textSecondary, flexShrink: 0 }}>→</Typography>
               <Typography
-                sx={{ fontSize: '0.78rem', fontFamily: 'monospace', color: c.accent, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', '&:hover': { color: c.accentHover } }}
+                sx={{
+                  fontSize: '0.78rem',
+                  fontFamily: recipientName ? 'inherit' : 'monospace',
+                  color: c.accent, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                  cursor: 'pointer', '&:hover': { color: c.accentHover },
+                }}
                 onClick={(e: MouseEvent) => { e.stopPropagation(); navigate(`/address/${tx.recipient}`); }}
               >
-                {tx.recipient.slice(0, 12)}…
+                {recipientName ?? `${tx.recipient.slice(0, 12)}…`}
               </Typography>
             </Box>
           )}
           {!tx.recipient && tx.name && (
             <Typography sx={{ fontSize: '0.78rem', color: c.textSecondary, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {tx.name}
+            </Typography>
+          )}
+          {tx.creatorAddress && (
+            <Typography sx={{ fontSize: '0.65rem', color: c.textSecondary, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', mt: 0.25, fontFamily: senderName ? 'inherit' : 'monospace' }}>
+              from <span style={{ fontWeight: senderName ? 600 : 400 }}>{senderName ?? tx.creatorAddress}</span>
             </Typography>
           )}
         </Box>

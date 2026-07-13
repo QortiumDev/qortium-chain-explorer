@@ -5,6 +5,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useColors } from '../theme/ColorTokensContext';
 import { tokens } from '../theme/tokens';
 import { HashChip } from '../components/common/HashChip';
+import { AddressChip } from '../components/common/AddressChip';
 import { fetchTransaction } from '../api/rest';
 import { formatDate, formatQort, txTypeLabel, txTypeCategory } from '../utils/format';
 import type { TxData } from '../types';
@@ -108,6 +109,11 @@ export function TxPage() {
         {tx.fee != null && (
           <FieldRow label="Fee"><FieldText>{formatQort(tx.fee)} QORT</FieldText></FieldRow>
         )}
+        {tx.creatorAddress && (
+          <FieldRow label="Sender">
+            <AddressChip address={tx.creatorAddress} onClick={() => navigate(`/address/${tx.creatorAddress}`)} />
+          </FieldRow>
+        )}
         {tx.creatorPublicKey && (
           <FieldRow label="Creator (pubkey)">
             <HashChip hash={tx.creatorPublicKey} />
@@ -115,7 +121,7 @@ export function TxPage() {
         )}
         {tx.recipient && (
           <FieldRow label="Recipient">
-            <HashChip hash={tx.recipient} onClick={() => navigate(`/address/${tx.recipient}`)} />
+            <AddressChip address={tx.recipient} onClick={() => navigate(`/address/${tx.recipient}`)} />
           </FieldRow>
         )}
         {tx.amount != null && (
@@ -133,7 +139,7 @@ export function TxPage() {
         )}
         {tx.seller && (
           <FieldRow label="Seller">
-            <HashChip hash={tx.seller} onClick={() => navigate(`/address/${tx.seller}`)} />
+            <AddressChip address={tx.seller} onClick={() => navigate(`/address/${tx.seller}`)} />
           </FieldRow>
         )}
         {tx.data && (
