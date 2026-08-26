@@ -176,8 +176,80 @@ const SERVICE_LABELS: Record<string, string> = {
   MESSAGE_PRIVATE:             'Private Message',
 };
 
-export function serviceLabel(service: string): string {
-  const s = typeof service === 'string' ? service : String(service);
+// Numeric service codes as defined by org.qortium.arbitrary.misc.Service in qortium-core.
+// The REST API sometimes returns the raw numeric code instead of the enum name.
+const SERVICE_CODES: Record<number, string> = {
+  1: 'AUTO_UPDATE',
+  2: 'AUTO_UPDATE_BINARY',
+  100: 'ARBITRARY_DATA',
+  120: 'QCHAT_ATTACHMENT',
+  121: 'QCHAT_ATTACHMENT_PRIVATE',
+  130: 'ATTACHMENT',
+  131: 'ATTACHMENT_PRIVATE',
+  140: 'FILE',
+  141: 'FILE_PRIVATE',
+  150: 'FILES',
+  151: 'FILES_PRIVATE',
+  160: 'CHAIN_DATA',
+  200: 'WEBSITE',
+  201: 'WEBSITE_PRIVATE',
+  300: 'GIT_REPOSITORY',
+  301: 'GIT_REPOSITORY_PRIVATE',
+  400: 'IMAGE',
+  401: 'IMAGE_PRIVATE',
+  410: 'THUMBNAIL',
+  420: 'QCHAT_IMAGE',
+  430: 'IMAGE_GALLERY',
+  431: 'IMAGE_GALLERY_PRIVATE',
+  500: 'VIDEO',
+  501: 'VIDEO_PRIVATE',
+  600: 'AUDIO',
+  601: 'AUDIO_PRIVATE',
+  610: 'QCHAT_AUDIO',
+  620: 'QCHAT_VOICE',
+  630: 'VOICE',
+  631: 'VOICE_PRIVATE',
+  640: 'PODCAST',
+  700: 'BLOG',
+  701: 'BLOG_PRIVATE',
+  777: 'BLOG_POST',
+  778: 'BLOG_COMMENT',
+  800: 'DOCUMENT',
+  801: 'DOCUMENT_PRIVATE',
+  900: 'LIST',
+  910: 'PLAYLIST',
+  1000: 'APP',
+  1001: 'APP_PRIVATE',
+  1100: 'METADATA',
+  1110: 'JSON',
+  1200: 'GIF_REPOSITORY',
+  1300: 'STORE',
+  1310: 'PRODUCT',
+  1330: 'OFFER',
+  1340: 'COUPON',
+  1400: 'CODE',
+  1410: 'PLUGIN',
+  1420: 'EXTENSION',
+  1500: 'GAME',
+  1510: 'ITEM',
+  1600: 'NFT',
+  1700: 'DATABASE',
+  1701: 'DATABASE_PRIVATE',
+  1710: 'SNAPSHOT',
+  1711: 'SNAPSHOT_PRIVATE',
+  1800: 'COMMENT',
+  1810: 'CHAIN_COMMENT',
+  1900: 'MAIL',
+  1901: 'MAIL_PRIVATE',
+  1910: 'MESSAGE',
+  1911: 'MESSAGE_PRIVATE',
+};
+
+export function serviceLabel(service: string | number): string {
+  let s = typeof service === 'string' ? service : String(service);
+  if (/^\d+$/.test(s)) {
+    s = SERVICE_CODES[Number(s)] ?? s;
+  }
   return SERVICE_LABELS[s] ?? s.replace(/_/g, ' ').replace(/\b\w/g, ch => ch.toUpperCase());
 }
 
