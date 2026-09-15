@@ -15,6 +15,20 @@ npm run build
 
 Output is a single HTML file at `dist/index.html`, ready to publish as a Qortium APP.
 
+## Deep links
+
+Home and other apps open Chain at its canonical address with a top-level
+query string:
+
+- `?_route=<hash route>` — start on any hash route (existing hand-off).
+- `?account=<address or name>` — start on that address page, or the name page
+  when the value is not an address. This is the Home `explorer`
+  assignment-role contract (qortium-home `docs/HOME_APP_ASSIGNMENTS.md`,
+  "Roles used by context menus"); Home's "View on explorer" context-menu item
+  uses it.
+
+`_route` wins when both are present.
+
 ## Naming
 
 The name this app publishes under is set in `src/apps.ts`:
