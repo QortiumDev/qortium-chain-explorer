@@ -8,8 +8,9 @@ import { AddressPage } from '../pages/AddressPage';
 import { PaymentsPage } from '../pages/PaymentsPage';
 import { NamePage } from '../pages/NamePage';
 import { useIframe } from '../hooks/useIframeListener';
+import { resolveStartRoute } from './startRoute';
 
-const _startRoute = new URLSearchParams(window.location.search).get('_route');
+const _startRoute = resolveStartRoute(window.location.search);
 if (_startRoute) window.location.hash = _startRoute;
 
 function Layout() {
